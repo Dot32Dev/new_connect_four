@@ -62,14 +62,16 @@ impl Board {
 		// Calculate the y position of the piece
 		let mut y = 0;
 		for i in 0..6 {
-			match self.board[x][i] {
-				Colour::None => continue,
-				_ => y = i,
+			if !(self.board[x][i] == Colour::None) {
+				y = i;
+				break;
 			}
 		}
 
+		// println!("x: {}, y: {}", x, y);
+
 		let colour = self.board[x][y];
-		println!("Colour: {:?}", colour);
+		// println!("Colour: {:?}", colour);
 
 		// VERTICAL
 		if y < 3 {
