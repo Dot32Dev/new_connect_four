@@ -52,13 +52,37 @@ fn main() {
         std::io::stdin().read_line(&mut input).unwrap();
         let input: usize = input.trim().parse().unwrap();
         board.drop_piece(input -1, Colour::Red);
-        board.check_win_at(input  -1);
+        match board.check_win_at(input -1) {
+            Some(Colour::Red) => {
+                println!("\n    {} wins!\n", "Red".red());
+                board.print();
+                break;
+            }
+            Some(Colour::Blue) => {
+                println!("\n    {} wins!\n", "Blue".blue());
+                board.print();
+                break;
+            }
+            _ => (),
+        }
         println!("\n    It's {}'s turn!\n", "Blue".blue());
         board.print();
         let mut input = String::new();
         std::io::stdin().read_line(&mut input).unwrap();
         let input: usize = input.trim().parse().unwrap();
         board.drop_piece(input -1, Colour::Blue);
-        board.check_win_at(input -1);
+        match board.check_win_at(input -1) {
+            Some(Colour::Red) => {
+                println!("\n    {} wins!\n", "Red".red());
+                board.print();
+                break;
+            }
+            Some(Colour::Blue) => {
+                println!("\n    {} wins!\n", "Blue".blue());
+                board.print();
+                break;
+            }
+            _ => (),
+        }
     }
 }

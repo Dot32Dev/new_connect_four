@@ -88,24 +88,22 @@ impl Board {
 
 		// HORIZONTAL
 		let mut count = 0;
-		if x < 7 - 3 {
-			for i in cmp::max(x as i32 - 3, 0) as usize..cmp::min(x as i32 + 3, 7 - 1)  as usize {
-				match self.board[i][y] {
-					col if col == colour => {
-						count += 1;
-						if count == 4 {
-							return Some(colour);
-						}
-					},
-					_ => count = 0,
-				}
+		for i in cmp::max(x as i32 - 3, 0) as usize..cmp::min(x as i32 + 3, 7 - 1)  as usize {
+			match self.board[i][y] {
+				col if col == colour => {
+					count += 1;
+					if count == 4 {
+						return Some(colour);
+					}
+				},
+				_ => count = 0,
 			}
 		}
 
 		// DIAGONAL ╱
 		if y < 3 && x < 7 - 3 {
 			for i in (y..=y+3).rev() {
-				println!("x: {}, y: {}", x as i32 - (y as i32-i as i32), i);
+				// println!("x: {}, y: {}", x as i32 - (y as i32-i as i32), i);
 				match self.board[(x as i32 - (y as i32-i as i32)) as usize][i] {
 					col if col == colour => {
 						if i == y {
@@ -120,7 +118,7 @@ impl Board {
 		// DIAGONAL ╲
 		if y < 3 && x > 3 {
 			for i in (y..=y+3).rev() {
-				println!("x: {}, y: {}", x as i32 + (y as i32-i as i32), i);
+				// println!("x: {}, y: {}", x as i32 + (y as i32-i as i32), i);
 				match self.board[(x as i32 + (y as i32-i as i32)) as usize][i] {
 					col if col == colour => {
 						if i == y {
