@@ -58,7 +58,16 @@ impl Board {
 		self.highlights = [[false; 6]; 7];
 	}
 
-	pub fn check_win_at(&mut self, x: usize, y: usize) -> Option<Colour> {
+	pub fn check_win_at(&mut self, x: usize) -> Option<Colour> {
+		// Calculate the y position of the piece
+		let mut y = 0;
+		for i in 0..6 {
+			match self.board[x][i] {
+				Colour::None => continue,
+				_ => y = i,
+			}
+		}
+
 		let colour = self.board[x][y];
 		println!("Colour: {:?}", colour);
 
