@@ -94,33 +94,34 @@ impl Board {
 		}
 
 		// DIAGONAL ╱
-		// if y < 3 && x < 7 - 3 {
-			// for i in (y..=y+3).rev() {
-			// 	println!("x: {}, y: {}", x as i32 - (y as i32-i as i32), i);
-			// 	match self.board[(x as i32 - (y as i32-i as i32)) as usize][i] {
-			// 		col if col == colour => {
-			// 			if i == y {
-			// 				return Some(colour);
-			// 			}
-			// 		},
-			// 		_ => break,
-			// 	}
-			// }
-		// }
+		if y < 3 && x < 7 - 3 {
+			for i in (y..=y+3).rev() {
+				println!("x: {}, y: {}", x as i32 - (y as i32-i as i32), i);
+				match self.board[(x as i32 - (y as i32-i as i32)) as usize][i] {
+					col if col == colour => {
+						if i == y {
+							return Some(colour);
+						}
+					},
+					_ => break,
+				}
+			}
+		}
 
-		// DIAGONAL ╱
-		// let mut count = 0;
-		// for i in cmp::max(y as i32 - 3, 0) as usize..cmp::min(y as i32 + 3, 7 - 1)  as usize {
-		// 	match self.board[(x as i32 + i as i32 -y as i32) as usize][(y as i32 + i as i32 -y as i32) as usize] {
-		// 		col if col == colour => {
-		// 			count += 1;
-		// 			if count == 4 {
-		// 				return Some(colour);
-		// 			}
-		// 		},
-		// 		_ => count = 0,
-		// 	}
-		// }
+		// DIAGONAL ╲
+		if y < 3 && x > 3 {
+			for i in (y..=y+3).rev() {
+				println!("x: {}, y: {}", x as i32 + (y as i32-i as i32), i);
+				match self.board[(x as i32 + (y as i32-i as i32)) as usize][i] {
+					col if col == colour => {
+						if i == y {
+							return Some(colour);
+						}
+					},
+					_ => break,
+				}
+			}
+		}
 
 		None
 	}
