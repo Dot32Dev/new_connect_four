@@ -103,31 +103,34 @@ impl Board {
 		}
 
 		// DIAGONAL ╱
-		if y < 3 && x < 7 - 3 {
-			for i in (y..=y+3).rev() {
-				// println!("x: {}, y: {}", x as i32 - (y as i32-i as i32), i);
-				match self.board[(x as i32 - (y as i32-i as i32)) as usize][i] {
+		let mut count = 0;
+		for i in (cmp::max(y as i8-3 as i8, 0) as usize..=y+3).rev() {
+			// println!("x: {}, y: {}", x as i32 - (y as i32-i as i32), i);
+			if cmp::max(x as i32 - (y as i32-i as i32), 0) == x as i32 - (y as i32-i as i32) && cmp::min(i, 6-1) == i {
+				match self.board[(x as i32 - (y as i32-i as i32)) as usize][cmp::min(i, 6-1)] {
 					col if col == colour => {
-						if i == y {
+						count += 1;
+						if count == 4 {
 							return Some(colour);
 						}
 					},
-					_ => break,
+					_ => count = 0,
 				}
 			}
 		}
 
 		// DIAGONAL ╲
-		if y < 3 && x > 3 {
-			for i in (y..=y+3).rev() {
-				// println!("x: {}, y: {}", x as i32 + (y as i32-i as i32), i);
-				match self.board[(x as i32 + (y as i32-i as i32)) as usize][i] {
+		let mut count = 0;
+		for i in (cmp::max(y as i8-3 as i8, 0) as usize..=y+3).rev() {
+			if cmp::max(x as i32 + (y as i32-i as i32), 0) == x as i32 + (y as i32-i as i32) && cmp::min(i, 6-1) == i {
+				match self.board[cmp::min(cmp::max(x as i32 + (y as i32-i as i32), 0), 7-1) as usize][cmp::min(i, 6-1)] {
 					col if col == colour => {
-						if i == y {
+						count += 1;
+						if count == 4 {
 							return Some(colour);
 						}
 					},
-					_ => break,
+					_ => count = 0,
 				}
 			}
 		}
