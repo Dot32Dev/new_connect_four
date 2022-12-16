@@ -1,42 +1,58 @@
 use std::cmp;
+use std::fmt;
 use crate::Colour;
 use colored::*;
+use termion::color;
 
 pub struct Board {
     pub board: [[Colour; 6]; 7],
-    pub highlights: [[bool; 6]; 7],
+	pub highlighted_column: Option<usize>,
 }
 
 impl Board {
     pub fn new() -> Board {
         Board {
             board: [[Colour::None; 6]; 7],
-            highlights: [[false; 6]; 7],
+			highlighted_column: None,
         }
     }
 
     pub fn print(&self) {
-        println!(" ╭ {} ╮", "1  2  3  4  5  6  7");
-        for y in 0..6 {
-            print!(" │");
-            for x in 0..7 {
-                match self.board[x][y] {
-                    Colour::None => print!("{}", " ▿ ".dimmed()),
-                    Colour::Red => match self.highlights[x][y] {
-                        true => print!("{}", " ⦻ ".red()),
-                        false => print!("{}", " ◉ ".red()),
-                    },
-                    Colour::Blue => match self.highlights[x][y] {
-                        true => print!("{}", " ⦻ ".blue()),
-                        false => print!("{}", " ◉ ".blue()),
-                    },
-                }
-            }
-            print!("│");
-            println!();
-        }
-        println!(" ╰─────────────────────╯");
+        println!("{}", self.to_string());
     }
+
+	pub fn to_string(&self) -> String {
+		let mut string = String::new();
+		string.push_str("╭ 1  2  3  4  5  6  7 ╮\n");
+		for y in 0..6 {
+			string.push_str("│");
+			for x in 0..7 {
+				let border = match self.highlighted_column {
+					Some(column) => if column == x { "┊" } else { " " },
+					None => " ",
+				};
+				match self.board[x][y] {
+					Colour::None => string.push_str(&format!("{1}{0}{1}", "▿".dimmed(), border)),
+					Colour::Red => string.push_str(&format!("{1}{0}{1}", "◉".red(), border)),
+					Colour::Blue => string.push_str(&format!("{1}{0}{1}", "◉".blue(), border)),
+				}
+			}
+			string.push_str("│\n");
+		}
+		string.push_str("╰");
+		for x in 0..7 {
+			match self.highlighted_column {
+				Some(column) => if column == x {
+					string.push_str("┴─┴")
+				} else {
+					string.push_str("───")
+				},
+				None => string.push_str("───"),
+			}
+		}
+		string.push_str("╯");
+		string
+	}
 
     pub fn drop_piece(&mut self, x: usize, piece: Colour) {
 		self.unhighlight_board();
@@ -44,7 +60,7 @@ impl Board {
             match self.board[x][y] {
                 Colour::None => {
                     self.board[x][y] = piece;
-					self.highlight_piece(x, y);
+					self.highlighted_column = Some(x);
                     break;
                 }
                 _ => continue,
@@ -52,12 +68,8 @@ impl Board {
         }
     }
 
-    fn highlight_piece(&mut self, x: usize, y: usize) {
-        self.highlights[x][y] = true;
-    }
-
-	fn unhighlight_board(&mut self) {
-		self.highlights = [[false; 6]; 7];
+	pub fn unhighlight_board(&mut self) {
+		self.highlighted_column = None;
 	}
 
 	pub fn check_win_at(&mut self, x: usize) -> Option<Colour> {
