@@ -23,11 +23,11 @@ impl Board {
                 match self.board[x][y] {
                     Colour::None => print!("{}", " ▿ ".dimmed()),
                     Colour::Red => match self.highlights[x][y] {
-                        true => print!("{}", " ◈ ".red()),
+                        true => print!("{}", " ⦻ ".red()),
                         false => print!("{}", " ◉ ".red()),
                     },
                     Colour::Blue => match self.highlights[x][y] {
-                        true => print!("{}", " ◈ ".blue()),
+                        true => print!("{}", " ⦻ ".blue()),
                         false => print!("{}", " ◉ ".blue()),
                     },
                 }
@@ -39,10 +39,12 @@ impl Board {
     }
 
     pub fn drop_piece(&mut self, x: usize, piece: Colour) {
+		self.unhighlight_board();
         for y in (0..6).rev() {
             match self.board[x][y] {
                 Colour::None => {
                     self.board[x][y] = piece;
+					self.highlight_piece(x, y);
                     break;
                 }
                 _ => continue,
@@ -50,11 +52,11 @@ impl Board {
         }
     }
 
-    pub fn highlight_piece(&mut self, x: usize, y: usize) {
+    fn highlight_piece(&mut self, x: usize, y: usize) {
         self.highlights[x][y] = true;
     }
 
-	pub fn unhighlight_board(&mut self) {
+	fn unhighlight_board(&mut self) {
 		self.highlights = [[false; 6]; 7];
 	}
 
