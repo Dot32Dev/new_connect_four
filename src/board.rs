@@ -1,8 +1,6 @@
 use std::cmp;
-use std::fmt;
 use crate::Colour;
 use colored::*;
-use termion::color;
 
 pub struct Board {
     pub board: [[Colour; 6]; 7],
@@ -17,6 +15,9 @@ impl Board {
         }
     }
 
+	// I would use this if i weren't using Termion
+	// This is just a wrapper for the to_string() function, that prints the string.
+	#[allow(dead_code)]
     pub fn print(&self) {
         println!("{}", self.to_string());
     }
@@ -55,7 +56,6 @@ impl Board {
 	}
 
     pub fn drop_piece(&mut self, x: usize, piece: Colour) {
-		self.unhighlight_board();
         for y in (0..6).rev() {
             match self.board[x][y] {
                 Colour::None => {
@@ -68,10 +68,7 @@ impl Board {
         }
     }
 
-	pub fn unhighlight_board(&mut self) {
-		self.highlighted_column = None;
-	}
-
+	// This took so long to write, but it works! (I think)
 	pub fn check_win_at(&mut self, x: usize) -> Option<Colour> {
 		// Calculate the y position of the piece
 		let mut y = 0;
