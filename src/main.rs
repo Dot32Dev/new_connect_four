@@ -26,6 +26,7 @@ fn main() {
     // Initialise the game
     let mut board = Board::new();
     let mut turn = Colour::Red;
+    let mut input = 8;
     // Game loop
     loop {
         // This just redraws the board, 
@@ -34,7 +35,6 @@ fn main() {
         redraw_game(&mut stdout, &board, turn);
 
         // This checks for input and updates the board
-        let mut input = 8;
         loop {
             let b = bytes.next().unwrap().unwrap();
             match b {
