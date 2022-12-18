@@ -27,8 +27,9 @@ fn main() {
     let mut board = Board::new();
     let mut turn = Colour::Red;
     let mut input = 8;
+    let mut turns = 0;
     // Game loop
-    loop {
+    while turns < 7*6 {
         // This just redraws the board, 
         // but with the current turn, the highlighted column, etc as well. 
         // It saves me from having to write the same code twice.
@@ -70,12 +71,20 @@ fn main() {
                 centred_print(&mut stdout, &format!("{}", board.to_string()), Some(11), size.1/2-4);
                 centred_print(&mut stdout, &format!("{}{}", "Press any key to quit.".dimmed(), termion::cursor::Goto(0, size.1)), Some(10), size.1/2+5);
                 let _ = bytes.next();
-                break;
+                return;
             }
             _ => (),
         }
         turn = if turn == Colour::Red { Colour::Blue } else { Colour::Red }; // Switch turns
+        turns += 1;
     }
+    // Clears the screen and hides the cursor
+    centred_print(&mut stdout, &format!("{}{}", termion::clear::All, termion::cursor::Hide), None, 1);
+
+    centred_print(&mut stdout, &format!("{}{}", "It's a draw!".dimmed(), termion::cursor::Goto(0, size.1)), Some(6), size.1/2-6);
+    centred_print(&mut stdout, &format!("{}", board.to_string()), Some(11), size.1/2-4);
+    centred_print(&mut stdout, &format!("{}{}", "Press any key to quit.".dimmed(), termion::cursor::Goto(0, size.1)), Some(10), size.1/2+5);
+    let _ = bytes.next();
 }
 
 fn centred_print(
