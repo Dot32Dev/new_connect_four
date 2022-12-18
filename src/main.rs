@@ -57,7 +57,10 @@ fn main() {
 
             stdout.flush().unwrap();
         }
-        board.drop_piece(input, turn);
+        match board.drop_piece(input, turn) {
+            Ok(_) => (),
+            Err(_) => continue,
+        }
         match board.check_win_at(input) {
             Some(colour) => {
                 // Clears the screen and hides the cursor

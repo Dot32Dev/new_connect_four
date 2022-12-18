@@ -55,17 +55,18 @@ impl Board {
 		string
 	}
 
-    pub fn drop_piece(&mut self, x: usize, piece: Colour) {
+    pub fn drop_piece(&mut self, x: usize, piece: Colour) -> Result<(), &str> {
         for y in (0..6).rev() {
             match self.board[x][y] {
                 Colour::None => {
                     self.board[x][y] = piece;
 					self.highlighted_column = Some(x);
-                    break;
+					return Ok(()); // Return Ok if the piece was dropped
                 }
                 _ => continue,
             }
         }
+		Err("Column is full") // Return Err if the column is full
     }
 
 	// This took so long to write, but it works! (I think)
