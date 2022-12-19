@@ -29,7 +29,7 @@ fn main() {
     let mut input = 8;
     let mut turns = 0;
     // Game loop
-    while turns < 7*6 {
+    while turns < 42 { // 42 is the maximum number of turns, as the board is 7x6
         // This just redraws the board, 
         // but with the current turn, the highlighted column, etc as well. 
         // It saves me from having to write the same code twice.
@@ -41,12 +41,38 @@ fn main() {
             match b {
                     // Quit on Ctrl+C
                     3 => return,
-                    // Enter
-                    13 => if input != 8 {break},
+                    // Enter or space key
+                    13 | 32 => if input != 8 {break},
                     // 1-7
                     49..=55 => {
                         input = (b - 49) as usize;
                         board.highlighted_column = Some(input);
+                        redraw_game(&mut stdout, &board, turn);
+                    },
+                    // Left arrow
+                    68 => {
+                        match board.highlighted_column {
+                            Some(column) => {
+                                if column > 0 {
+                                    input = column - 1;
+                                    board.highlighted_column = Some(column - 1);
+                                }
+                            },
+                            None => (),
+                        }
+                        redraw_game(&mut stdout, &board, turn);
+                    },
+                    // Right arrow
+                    67 => {
+                        match board.highlighted_column {
+                            Some(column) => {
+                                if column < 6 {
+                                    input = column + 1;
+                                    board.highlighted_column = Some(column + 1);
+                                }
+                            },
+                            None => (),
+                        }
                         redraw_game(&mut stdout, &board, turn);
                     },
                     // Deselect board if random key pressed
