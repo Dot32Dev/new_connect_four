@@ -161,5 +161,5 @@ fn redraw_game(
         Some(_) => centred_print(stdout, &format!("{}", "Press enter to confirm."), None, size.1/2+6),
         None => (),
     }
-    centred_print(stdout, &format!("{}", "Press Ctrl+C to quit at any time.".dimmed()), Some(16), size.1/2+8);
+    centred_print(stdout, &format!("{}{}", "Press Ctrl+C to quit at any time.".dimmed(), termion::cursor::Goto(0, size.1)), Some(16), size.1/2+8);
 }
