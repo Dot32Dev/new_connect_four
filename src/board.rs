@@ -2,6 +2,7 @@ use std::cmp;
 use crate::Colour;
 use colored::*;
 
+#[derive(Clone, Copy)]
 pub struct Board {
     pub board: [[Colour; 6]; 7],
 	pub highlighted_column: Option<usize>,
@@ -55,13 +56,13 @@ impl Board {
 		string
 	}
 
-    pub fn drop_piece(&mut self, x: usize, piece: Colour) -> Result<(), &str> {
+    pub fn drop_piece(&mut self, x: usize, piece: Colour) -> Result<usize, &str> {
         for y in (0..6).rev() {
             match self.board[x][y] {
                 Colour::None => {
                     self.board[x][y] = piece;
 					self.highlighted_column = Some(x);
-					return Ok(()); // Return Ok if the piece was dropped
+					return Ok(y); // Return Ok if the piece was dropped, and the y position of the piece
                 }
                 _ => continue,
             }
@@ -148,5 +149,27 @@ impl Board {
 		}
 
 		None
+	}
+
+	// Used for animating the drop of a piece
+	pub fn animation_frame(&mut self, frame: usize) -> Board {
+		// Calculate the y position of the piece
+		let mut y = 0;
+		for i in 0..6 {
+			if !(self.board[self.highlighted_column.unwrap()][i] == Colour::None) {
+				y = i;
+				break;
+			}
+		}
+		// Finds the colour of the piece
+		let colour = self.board[self.highlighted_column.unwrap()][y];
+		// Creates a new board based off the current board
+		let mut board = self.clone();
+		// Removes the piece from the new board
+		board.board[self.highlighted_column.unwrap()][y] = Colour::None;
+		// Adds the piece to the new board, at the Y index specified by frame
+		board.board[self.highlighted_column.unwrap()][frame] = colour;
+		// Returns the new board
+		board
 	}
 }

@@ -85,7 +85,13 @@ fn main() {
             stdout.flush().unwrap();
         }
         match board.drop_piece(input, turn) {
-            Ok(_) => (),
+            Ok(y) => {
+                // Animate the piece falling
+                for frame in 0..y {
+                    redraw_game(&mut stdout, &board.animation_frame(frame), turn);
+                    std::thread::sleep(std::time::Duration::from_millis(10));
+                }
+            },
             Err(_) => continue,
         }
         match board.check_win_at(input) {
