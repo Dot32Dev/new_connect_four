@@ -89,7 +89,7 @@ fn main() {
                 // Animate the piece falling
                 for frame in 0..y {
                     redraw_game(&mut stdout, &board.animation_frame(frame), turn);
-                    std::thread::sleep(std::time::Duration::from_millis(10));
+                    std::thread::sleep(std::time::Duration::from_millis(15));
                 }
             },
             Err(_) => continue,
