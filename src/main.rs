@@ -15,7 +15,7 @@ pub enum Colour {
 }
 
 fn main() {
-    // For handling Termion input
+    // For handling Termion and it's input
     let stdout = stdout();
     let mut stdout = stdout.lock().into_raw_mode().unwrap();
     let stdin = stdin();
@@ -32,7 +32,7 @@ fn main() {
     while turns < 42 { // 42 is the maximum number of turns, as the board is 7x6
         // This just redraws the board, 
         // but with the current turn, the highlighted column, etc as well. 
-        // It saves me from having to write the same code twice.
+        // It saves me from having to write the same code repeatedly.
         redraw_game(&mut stdout, &board, turn);
 
         // This checks for input and updates the board
@@ -86,12 +86,13 @@ fn main() {
         }
         match board.drop_piece(input, turn) {
             Ok(y) => {
-                // Animate the piece falling
+                // Animate the piece falling, iterating from 0 to the Y value returned from drop_piece
                 for frame in 0..y {
                     redraw_game(&mut stdout, &board.animation_frame(frame), turn);
                     std::thread::sleep(std::time::Duration::from_millis(15));
                 }
             },
+            // If the column is full, just continue the game loop, and don't change turns
             Err(_) => continue,
         }
         match board.check_win_at(input) {
@@ -110,9 +111,9 @@ fn main() {
         turn = if turn == Colour::Red { Colour::Blue } else { Colour::Red }; // Switch turns
         turns += 1;
     }
-    // Clears the screen and hides the cursor
+    // Draw condition
+    // Only runs if the game loop ends without a winner
     centred_print(&mut stdout, &format!("{}{}", termion::clear::All, termion::cursor::Hide), None, 1);
-
     centred_print(&mut stdout, &format!("{}{}", "It's a draw!".dimmed(), termion::cursor::Goto(0, size.1)), Some(6), size.1/2-6);
     centred_print(&mut stdout, &format!("{}", board.to_string()), Some(11), size.1/2-4);
     centred_print(&mut stdout, &format!("{}{}", "Press any key to quit.".dimmed(), termion::cursor::Goto(0, size.1)), Some(10), size.1/2+5);
