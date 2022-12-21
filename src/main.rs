@@ -5,6 +5,7 @@ use unicode_segmentation::UnicodeSegmentation;
 
 use termion::raw::IntoRawMode;
 use termion::terminal_size;
+use termion::screen::IntoAlternateScreen;
 use std::io::{Read, Write, stdout, stdin};
 
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -17,7 +18,7 @@ pub enum Colour {
 fn main() {
     // For handling Termion and it's input
     let stdout = stdout();
-    let mut stdout = stdout.lock().into_raw_mode().unwrap();
+    let mut stdout = stdout.lock().into_raw_mode().unwrap().into_alternate_screen().unwrap();
     let stdin = stdin();
     let stdin = stdin.lock();
     let mut bytes = stdin.bytes();
