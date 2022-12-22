@@ -16,7 +16,7 @@ Afterwhich, simply run the following commands:
 git clone https://github.com/Dot32IsCool/new_connect_four.git
 ```
 ```bash
-cd comand-line-connect-4
+cd new_connect_four
 ```
 ```bash
 cargo run --release
